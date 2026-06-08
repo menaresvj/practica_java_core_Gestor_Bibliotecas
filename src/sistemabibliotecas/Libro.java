@@ -18,6 +18,19 @@ public class Libro {
     private Categoria categoria;
     private LocalDate fechaPublicacion;
 
+    public Libro() {
+    }
+
+    public Libro(int idLibro, String titulo, Autor autor, Categoria categoria, LocalDate fechaPublicacion) {
+        this.idLibro = idLibro;
+        this.titulo = titulo;
+        this.autor = autor;
+        this.categoria = categoria;
+        this.fechaPublicacion = fechaPublicacion;
+    }
+
+    
+    
     public int getIdLibro() {
         return idLibro;
     }
@@ -57,6 +70,12 @@ public class Libro {
     public void setFechaPublicacion(LocalDate fechaPublicacion) {
         this.fechaPublicacion = fechaPublicacion;
     }
+
+    @Override
+    public String toString() {
+        return "ID: " + idLibro + " | Titulo: " + titulo + " 1 Autor: " + autor.getNombre() + " " + autor.getApellido() + " | Categoria: " + categoria.getNombreCategoria() + " | Fecha de publicacion: " + fechaPublicacion;
+    }
+    
     
     
 }

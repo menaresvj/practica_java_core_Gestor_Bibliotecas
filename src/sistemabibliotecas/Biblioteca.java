@@ -139,4 +139,20 @@ public class Biblioteca {
             System.out.println(categoria.toString());
         }
     }
+    
+    // autores
+    
+    public void ingresarAutor(Autor autor) {
+        catalogoAutores.add(autor);
+    }
+    
+    public void eliminarAutor(Autor autor) {
+        catalogoAutores.remove(autor);
+    }
+    
+    // libros
+    
+    public void ingresarLibro(Libro libro) {
+        catalogoLibros.add(libro);
+    }
 }

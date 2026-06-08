@@ -4,6 +4,9 @@
  */
 package sistemabibliotecas;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.Scanner;
 
 /**
@@ -13,6 +16,7 @@ import java.util.Scanner;
 public class Menu {
 
     Scanner sc = new Scanner(System.in);
+    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
     
     public Menu() {
     }
@@ -87,6 +91,54 @@ public class Menu {
         
         switch (opcion) {
             
+            case 1: // ingresar Libro
+                String tituloLibro = escogerStringSimple("Ingrese el título del libro: ");
+                int idAutorLibro = escogerIntSimple("Ingrese el ID del autor del libro: ");
+                Autor autorLibro = null;
+                for (Autor autor : biblioteca.getCatalogoAutores()) {
+                    if (autor.getIdAutor() == idAutorLibro) {
+                        autorLibro = autor; break;
+                    }
+                }
+                if (autorLibro == null) {
+                    System.out.println("No se ha encontrado un autor con ese ID. Operación cancelada."); break;
+                }
+                int idCategoriaLibro = escogerIntSimple("Ingrese el ID de la categoría del libro: ");
+                Categoria categoriaLibro = null;
+                for (Categoria categoria : biblioteca.getListaCategorias()) {
+                    if (categoria.getIdCategoria() == idCategoriaLibro) {
+                        categoriaLibro = categoria; break;
+                    }
+                }
+                if (categoriaLibro == null) {
+                    System.out.println("No se ha encontrado una categoría con ese ID. Operación cancelada."); break;
+                }                
+                String textoFechaPublicacion = escogerStringSimple("Ingrese la fecha de publicación del libro, en formato dd/mm/yyyy: ");
+                LocalDate fechaParseada = parsearFechaString(textoFechaPublicacion);
+                if (fechaParseada == null) {
+                    System.out.println("Error en el ingreso de la fecha. Operación cancelada."); break;
+                }
+                String confirmacion = escogerStringSimple("\nConfirme que desea ingresar el siguiente libro:\nTítulo: " + tituloLibro + "\nAutor: " + autorLibro + "\nCategoría: " + categoriaLibro.getNombreCategoria() + "\nFecha de publicación: " + fechaParseada + "\nIngrese S/N: ");
+                if (!confirmacion.equalsIgnoreCase("S") && !confirmacion.equalsIgnoreCase("SI") && !confirmacion.equalsIgnoreCase("SÍ")) {
+                    System.out.println("Operación cancelada."); break;
+                }       
+                Libro libroNuevo = new Libro(biblioteca.getContadorLibros()+1, tituloLibro, autorLibro, categoriaLibro, fechaParseada);
+                biblioteca.setContadorLibros(biblioteca.getContadorLibros()+1);
+                biblioteca.ingresarLibro(libroNuevo);
+                System.out.println("El libro se ha ingresado exitosamente.");
+                break;
+                
+            case 3: // listar libros
+                if (biblioteca.getCatalogoLibros().isEmpty()) {
+                    System.out.println("No se han ingresado libros.");
+                }
+                System.out.println("Libros en el catálogo: ");
+                for (Libro libro : biblioteca.getCatalogoLibros()) {
+                    System.out.println(libro.toString());
+                }
+                break;
+                
+            
             case 5: // ingresar categoría
                 String nombreCategoria = escogerStringSimple("Ingrese el nombre de la categoría: ");
                 String descripcionCategoria = escogerStringSimple("Ingrese la descripción de la categoría: ");
@@ -110,12 +162,155 @@ public class Menu {
                 if (categoriaEliminar == null) {
                     System.out.println("No se ha encontrado una categoría con ese ID. Operación cancelada."); break;
                 }
+                confirmacion = escogerStringSimple("¿Confirma que desea eliminar la categoría " + categoriaEliminar.getNombreCategoria() + "? Ingrese: S/N: ");
+                if (!confirmacion.equalsIgnoreCase("S") && !confirmacion.equalsIgnoreCase("SI") && !confirmacion.equalsIgnoreCase("SÍ")) {
+                    System.out.println("Operación cancelada."); break;
+                }
                 biblioteca.eliminarCategoria(categoriaEliminar);
                 System.out.println("Categoría eliminada exitosamente."); break;
                 
-            case 7: // Listar categorías
+            case 7: // listar categorías
                 biblioteca.listarCategorias();
                 break;
+                
+            case 9: // ingresar autor
+                String nombreAutor = escogerStringSimple("Ingrese el nombre del autor que desea ingresar: ");
+                String apellidoAutor = escogerStringSimple("Ingrese el apellido del autor que desea ingresar: ");
+                String nacionalidadAutor = escogerStringSimple("Ingrese la nacionalidad del autor que desea ingresar: ");
+                String textoFechaNac = escogerStringSimple("Ingrese la fecha de nacimiento del autor que desea ingresar en formato dd/mm/yyyy: ");                
+                LocalDate parsedFecha = parsearFechaString(textoFechaNac);
+                if (parsedFecha == null) {
+                    System.out.println("Error en el ingreso de la fecha. Operación cancelada."); break;
+                }
+                Genero genero = null;           
+                while (genero == null) {
+                    for (int i = 0; i < Genero.values().length; i++) {
+                        System.out.println((i+1) + ". " + Genero.values()[i]);
+                    }
+                    opcion = escogerIntSimple("Escoja una opción de género: ");
+                    switch (opcion) {
+                        case 1:
+                            genero = Genero.MASCULINO; break;
+                        case 2:
+                            genero = Genero.FEMENINO; break;
+                        case 3:
+                            genero = Genero.OTRO; break;
+                        default:
+                            System.out.println("Opción inválida.");               
+                    }
+                }
+                biblioteca.setContadorAutores(biblioteca.getContadorAutores()+1);
+                Autor autorNuevo = new Autor(biblioteca.getContadorAutores(), nombreAutor, apellidoAutor, nacionalidadAutor, parsedFecha, genero);
+                biblioteca.ingresarAutor(autorNuevo);
+                System.out.println("Autor ingresado exitosamente."); break;
+                
+            case 10: // eliminar autor
+                if (biblioteca.getCatalogoAutores().isEmpty()) {
+                    System.out.println("No se han ingresado autores."); break;
+                }
+                int idAutorEliminar = escogerIntSimple("Ingrese el ID del autor que desea eliminar: ");
+                Autor autorEliminar = null;
+                for (Autor autor : biblioteca.getCatalogoAutores()) {
+                    if (autor.getIdAutor() == idAutorEliminar) {
+                        autorEliminar = autor; break;
+                    }
+                }
+                if (autorEliminar == null) {
+                    System.out.println("No se ha encontrado un autor con ese ID. Operación cancelada."); break;
+                }
+                confirmacion = escogerStringSimple("¿Confirma que desea eliminar el autor " + autorEliminar.getNombre() + " " + autorEliminar.getApellido() + "? Ingrese: S/N: ");
+                if (!confirmacion.equalsIgnoreCase("S") && !confirmacion.equalsIgnoreCase("SI") && !confirmacion.equalsIgnoreCase("SÍ")) {
+                    System.out.println("Operación cancelada."); break;
+                }
+                biblioteca.eliminarAutor(autorEliminar);
+                System.out.println("Autor eliminado exitosamente."); break;
+
+            case 11: // buscar autor
+                if (biblioteca.getCatalogoAutores().isEmpty()) {
+                    System.out.println("No se han ingresado autores."); break;
+                }
+                opcion = escogerIntSimple("Ingrese:\n1.- Buscar por ID\n2.- Buscar por nombre\n3.- Buscar por apellido\n4.- Buscar por nacionalidad\nEscoja una opción: ");
+                Autor autorBuscado = null;
+                boolean busquedaExitosa = false;
+                boolean imprimirMensajeExito = false;
+                
+                switch (opcion) {
+                    case 1: // buscar autor por id
+                        int idBuscado = escogerIntSimple("Ingrese el ID del autor que desea buscar: ");
+                        for (Autor autor : biblioteca.getCatalogoAutores()) {
+                            if (autor.getIdAutor() == idBuscado) {
+                                autorBuscado = autor; break;
+                            }
+                        }
+                    if (autorBuscado == null) {
+                        System.out.println("No se ha encontrado ningún autor."); break;
+                    }
+                    System.out.println("Autor encontrado: ");
+                    System.out.println(autorBuscado.toString()); break;
+                    
+                    case 2: // buscar autor por nombre 
+                        String nombreBuscar = escogerStringSimple("Ingrese el nombre del autor que desea buscar: ");
+                        for (Autor autor : biblioteca.getCatalogoAutores()) {
+                            if (autor.getNombre().toLowerCase().contains(nombreBuscar)) {
+                                busquedaExitosa = true;
+                                if (busquedaExitosa == true && imprimirMensajeExito == false) {
+                                    System.out.println("Autores encontrados: ");
+                                    imprimirMensajeExito = true;
+                                }
+                                System.out.println(autor.toString());
+                            }
+                        }
+                        if (busquedaExitosa == false) {
+                            System.out.println("No se ha encontrado ningún autor.");
+                        }
+                        break;
+                        
+                    case 3: // buscar autor por apellido
+                        String apellidoBuscar = escogerStringSimple("Ingrese el apellido del autor que desea buscar: ");
+                        for (Autor autor : biblioteca.getCatalogoAutores()) {
+                            if (autor.getApellido().toLowerCase().contains(apellidoBuscar)) {
+                                busquedaExitosa = true;
+                                if (busquedaExitosa == true && imprimirMensajeExito == false) {
+                                    System.out.println("Autores encontrados: ");
+                                    imprimirMensajeExito = true;
+                                }
+                                System.out.println(autor.toString());
+                            }
+                        }
+                        if (busquedaExitosa == false) {
+                            System.out.println("No se ha encontrado ningún autor.");
+                        }
+                        break;
+                        
+                    case 4: // buscar autor por nacionalidad
+                        String nacionalidadBuscar = escogerStringSimple("Ingrese la nacionalidad del autor que desea buscar: ");
+                        for (Autor autor : biblioteca.getCatalogoAutores()) {
+                            if (autor.getNacionalidad().toLowerCase().contains(nacionalidadBuscar)) {
+                                busquedaExitosa = true;
+                                if (busquedaExitosa == true && imprimirMensajeExito == false) {
+                                    System.out.println("Autores encontrados: ");
+                                    imprimirMensajeExito = true;
+                                }
+                                System.out.println(autor.toString());
+                            }
+                        }
+                        if (busquedaExitosa == false) {
+                            System.out.println("No se ha encontrado ningún autor.");
+                        }
+                        break;
+                    
+                    default:
+                        System.out.println("Opción inválida."); break;               
+                }           
+                break;
+                
+            case 12: // listar autores
+                if (biblioteca.getCatalogoAutores().isEmpty()) {
+                    System.out.println("No se han ingresado autores."); break;
+                }
+                for (Autor autor : biblioteca.getCatalogoAutores()) {
+                    System.out.println(autor.toString());
+                } break;
                 
             case 13: // volver al menú principal
                 return;
@@ -124,6 +319,8 @@ public class Menu {
                 System.out.println("Opción inválida.");
         }
     }
+        
+
     
     // funciones de utilidad
     
@@ -145,6 +342,15 @@ public class Menu {
         System.out.print(mensaje);
         String texto = sc.nextLine();
         return texto;
+    }
+    
+    public LocalDate parsearFechaString(String textoFecha) { 
+        try {
+            LocalDate parsedFecha = LocalDate.parse(textoFecha, formatter); 
+            return parsedFecha;
+        } catch (Exception e) {
+            return null;
+        }
     }
     
 }

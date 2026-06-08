@@ -12,23 +12,26 @@ import java.util.ArrayList;
  * @author vicente
  */
 public class Autor {
+
     private int idAutor;
-    private String nombre, apellido, nacionalidad;
+    private String nombre;
+    private String apellido;
+    private String nacionalidad;
     private LocalDate fechaNacimiento;
+    private Genero genero;
+
     private ArrayList<Libro> librosEscritos = new ArrayList<>();
-    private enum genero {
-    MASCULINO, FEMENINO, OTRO
-    }
 
     public Autor() {
     }
 
-    public Autor(int idAutor, String nombre, String apellido, String nacionalidad, LocalDate fechaNacimiento) {
+    public Autor(int idAutor, String nombre, String apellido, String nacionalidad, LocalDate fechaNacimiento, Genero genero) {
         this.idAutor = idAutor;
         this.nombre = nombre;
         this.apellido = apellido;
         this.nacionalidad = nacionalidad;
         this.fechaNacimiento = fechaNacimiento;
+        this.genero = genero;
     }
 
     public int getIdAutor() {
@@ -71,6 +74,14 @@ public class Autor {
         this.fechaNacimiento = fechaNacimiento;
     }
 
+    public Genero getGenero() {
+        return genero;
+    }
+
+    public void setGenero(Genero genero) {
+        this.genero = genero;
+    }
+
     public ArrayList<Libro> getLibrosEscritos() {
         return librosEscritos;
     }
@@ -78,6 +89,12 @@ public class Autor {
     public void setLibrosEscritos(ArrayList<Libro> librosEscritos) {
         this.librosEscritos = librosEscritos;
     }
+
+    @Override
+    public String toString() {
+        return "ID: " + idAutor + " | Nombre: " + nombre + " | Apellido: " + apellido + " | Nacionalidad: " + nacionalidad + " | Fecha de nacimiento: " + fechaNacimiento + " | Genero: " + genero + " | Libros en la biblioteca: " + librosEscritos.size();
+    }
     
     
+
 }
