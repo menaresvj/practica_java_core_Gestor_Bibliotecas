@@ -28,20 +28,20 @@ public class Menu {
             int opcion = escogerIntSimple("Escoja una opcion: ");
             
             switch (opcion) {
-                case 1:
-                    System.out.println("Opción 1"); // Menu Clientes
+                case 1: // Menu Clientes
+                    System.out.println("Opción 1"); 
                     break;
                     
                 case 2: // Menu Biblioteca
-                    menuBiblioteca();
+                    menuBiblioteca(biblioteca);
                     break;
                     
-                case 3:
-                    System.out.println("Opción 3"); // Menu Préstamos
+                case 3: // Menu Préstamos
+                    System.out.println("Opción 3"); 
                     break;
                     
-                case 4:
-                    System.out.println("Gracias por utilizar nuestra app."); // Salir
+                case 4: // Salir
+                    System.out.println("Gracias por utilizar nuestra app."); 
                     ejecutando = false;
                     break;
                     
@@ -66,7 +66,7 @@ public class Menu {
     
     // menú biblioteca
     
-    public void menuBiblioteca() {
+    public void menuBiblioteca(Biblioteca biblioteca) {
         System.out.println("");
         System.out.println("---Menu Biblioteca---");
         System.out.println("1.- Ingresar libro");
@@ -86,7 +86,38 @@ public class Menu {
         int opcion = escogerIntSimple("Escoja una opción: ");
         
         switch (opcion) {
-            case 13:
+            
+            case 5: // ingresar categoría
+                String nombreCategoria = escogerStringSimple("Ingrese el nombre de la categoría: ");
+                String descripcionCategoria = escogerStringSimple("Ingrese la descripción de la categoría: ");
+                biblioteca.setContadorCategorias(biblioteca.getContadorCategorias() + 1);
+                int idCategoriaNueva = biblioteca.getContadorCategorias();
+                Categoria categoriaNueva = new Categoria(idCategoriaNueva, nombreCategoria, descripcionCategoria);
+                biblioteca.ingresarCategoria(categoriaNueva);
+                System.out.println("Categoría ingresada exitosamente."); break;
+                
+            case 6: // eliminar categoría
+                if (biblioteca.getListaCategorias().isEmpty()) {
+                    System.out.println("No se han ingresado categorías."); break;
+                }
+                int idSeleccionada = escogerIntSimple("Ingrese el ID de la categoría que desea eliminar: ");
+                Categoria categoriaEliminar = null;
+                for (Categoria categoria : biblioteca.getListaCategorias()) {
+                    if (categoria.getIdCategoria() == idSeleccionada) {
+                        categoriaEliminar = categoria; break;
+                    }
+                }
+                if (categoriaEliminar == null) {
+                    System.out.println("No se ha encontrado una categoría con ese ID. Operación cancelada."); break;
+                }
+                biblioteca.eliminarCategoria(categoriaEliminar);
+                System.out.println("Categoría eliminada exitosamente."); break;
+                
+            case 7: // Listar categorías
+                biblioteca.listarCategorias();
+                break;
+                
+            case 13: // volver al menú principal
                 return;
             
             default:
@@ -108,6 +139,12 @@ public class Menu {
                 sc.nextLine();
             }
         }
+    }
+    
+    public String escogerStringSimple(String mensaje) {
+        System.out.print(mensaje);
+        String texto = sc.nextLine();
+        return texto;
     }
     
 }

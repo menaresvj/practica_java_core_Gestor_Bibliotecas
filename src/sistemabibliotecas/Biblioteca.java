@@ -16,9 +16,14 @@ public class Biblioteca {
     private ArrayList<Libro> catalogoLibros = new ArrayList<>();
     private ArrayList<Autor> catalogoAutores = new ArrayList<>();
     private ArrayList<Cliente> listaClientes = new ArrayList<>();
-    private ArrayList<Prestamo> listaPrestamo = new ArrayList<>();
-    private ArrayList<Categoria> listaCategoria = new ArrayList<>();
-
+    private ArrayList<Prestamo> listaPrestamos = new ArrayList<>();
+    private ArrayList<Categoria> listaCategorias = new ArrayList<>();
+    private int contadorCategorias = 0;
+    private int contadorLibros = 0;
+    private int contadorAutores = 0;
+    private int contadorPrestamos = 0;
+    private int contadorClientes = 0;
+    
     public Biblioteca() {
     }
 
@@ -58,21 +63,80 @@ public class Biblioteca {
         this.listaClientes = listaClientes;
     }
 
-    public ArrayList<Prestamo> getListaPrestamo() {
-        return listaPrestamo;
+    public ArrayList<Prestamo> getListaPrestamos() {
+        return listaPrestamos;
     }
 
-    public void setListaPrestamo(ArrayList<Prestamo> listaPrestamo) {
-        this.listaPrestamo = listaPrestamo;
+    public void setListaPrestamos(ArrayList<Prestamo> listaPrestamo) {
+        this.listaPrestamos = listaPrestamo;
     }
 
-    public ArrayList<Categoria> getListaCategoria() {
-        return listaCategoria;
+    public ArrayList<Categoria> getListaCategorias() {
+        return listaCategorias;
     }
 
-    public void setListaCategoria(ArrayList<Categoria> listaCategoria) {
-        this.listaCategoria = listaCategoria;
+    public void setListaCategorias(ArrayList<Categoria> listaCategoria) {
+        this.listaCategorias = listaCategoria;
+    }
+
+    public int getContadorCategorias() {
+        return contadorCategorias;
+    }
+
+    public void setContadorCategorias(int contadorCategorias) {
+        this.contadorCategorias = contadorCategorias;
+    }
+
+    public int getContadorLibros() {
+        return contadorLibros;
+    }
+
+    public void setContadorLibros(int contadorLibros) {
+        this.contadorLibros = contadorLibros;
+    }
+
+    public int getContadorAutores() {
+        return contadorAutores;
+    }
+
+    public void setContadorAutores(int contadorAutores) {
+        this.contadorAutores = contadorAutores;
+    }
+
+    public int getContadorPrestamos() {
+        return contadorPrestamos;
+    }
+
+    public void setContadorPrestamos(int contadorPrestamos) {
+        this.contadorPrestamos = contadorPrestamos;
+    }
+
+    public int getContadorClientes() {
+        return contadorClientes;
+    }
+
+    public void setContadorClientes(int contadorClientes) {
+        this.contadorClientes = contadorClientes;
     }
     
+    // métodos custom
     
+    // categorías
+    
+    public void ingresarCategoria(Categoria categoria) {
+        listaCategorias.add(categoria);
+    }
+    
+    public void eliminarCategoria(Categoria categoria) {
+        listaCategorias.remove(categoria);
+    }
+    
+    public void listarCategorias() {
+        if (getListaCategorias().isEmpty()) {
+            System.out.println("No se han ingresado categorías.");
+        }
+        for (Categoria categoria : getListaCategorias()) {
+            System.out.println(categoria.toString());
+        }
+    }
 }
