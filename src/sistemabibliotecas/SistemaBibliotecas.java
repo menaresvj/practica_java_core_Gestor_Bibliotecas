@@ -4,6 +4,8 @@
  */
 package sistemabibliotecas;
 
+import java.util.Scanner;
+
 /**
  *
  * @author vicente
@@ -15,6 +17,16 @@ public class SistemaBibliotecas {
      */
     public static void main(String[] args) {
         // TODO code application logic here
+        
+        
+        // creacion de variables
+        Biblioteca biblioteca = new Biblioteca("Biblioteca Testing");
+        Menu menu = new Menu();
+        
+        // funcionamiento de la app
+        System.out.println("---Bienvenidos a la app de la " + biblioteca.getNombreBiblioteca() + ".");        
+        menu.iniciar(biblioteca);
+        
     }
     
 }
